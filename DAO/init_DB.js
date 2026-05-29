@@ -48,7 +48,9 @@ async function migrarTablaUsuarios() {
     passwordTemporal,
   ]);
   await run("UPDATE usuarios SET rol = 'user' WHERE rol IS NULL OR trim(rol) = ''");
-  await run("UPDATE usuarios SET creado_en = CURRENT_TIMESTAMP WHERE creado_en IS NULL OR trim(creado_en) = ''");
+  await run(
+    "UPDATE usuarios SET creado_en = CURRENT_TIMESTAMP WHERE creado_en IS NULL OR trim(creado_en) = ''",
+  );
   await run('CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_usuario ON usuarios(usuario)');
 }
 

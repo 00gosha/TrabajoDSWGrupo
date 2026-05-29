@@ -15,13 +15,13 @@ export async function crearUsuario({ nombre, usuario, password }) {
   const usuarioLimpio = usuario?.trim().toLowerCase();
 
   if (!nombreLimpio || !usuarioLimpio || !password) {
-    const error = new Error('Nombre, usuario y contraseña son obligatorios.');
+    const error = new Error('Nombre, usuario y contrasena son obligatorios.');
     error.status = 400;
     throw error;
   }
 
   if (password.length < 6) {
-    const error = new Error('La contraseña debe tener al menos 6 caracteres.');
+    const error = new Error('La contrasena debe tener al menos 6 caracteres.');
     error.status = 400;
     throw error;
   }
@@ -29,7 +29,7 @@ export async function crearUsuario({ nombre, usuario, password }) {
   const usuarioExistente = await get('SELECT id FROM usuarios WHERE usuario = ?', [usuarioLimpio]);
 
   if (usuarioExistente) {
-    const error = new Error('Ese usuario ya está registrado.');
+    const error = new Error('Ese usuario ya esta registrado.');
     error.status = 409;
     throw error;
   }
@@ -52,7 +52,7 @@ export async function autenticarUsuario({ usuario, password }) {
   const usuarioLimpio = usuario?.trim().toLowerCase();
 
   if (!usuarioLimpio || !password) {
-    const error = new Error('Usuario y contraseña son obligatorios.');
+    const error = new Error('Usuario y contrasena son obligatorios.');
     error.status = 400;
     throw error;
   }
@@ -60,7 +60,7 @@ export async function autenticarUsuario({ usuario, password }) {
   const usuarioEncontrado = await get('SELECT * FROM usuarios WHERE usuario = ?', [usuarioLimpio]);
 
   if (!usuarioEncontrado) {
-    const error = new Error('Usuario o contraseña incorrectos.');
+    const error = new Error('Usuario o contrasena incorrectos.');
     error.status = 401;
     throw error;
   }
@@ -68,7 +68,7 @@ export async function autenticarUsuario({ usuario, password }) {
   const passwordValida = await bcrypt.compare(password, usuarioEncontrado.password);
 
   if (!passwordValida) {
-    const error = new Error('Usuario o contraseña incorrectos.');
+    const error = new Error('Usuario o contrasena incorrectos.');
     error.status = 401;
     throw error;
   }
