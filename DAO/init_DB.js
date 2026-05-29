@@ -1,6 +1,7 @@
 const db = require('./base_de_datos');
 const bcrypt = require('bcrypt');
 
+//Creamos la tabla de usuarios y añadimos un usuario admin y otro normal. localmente ya que no tenemos para registrar usuarios en nuestra pagina.
 function initDB() {
     db.run(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -16,7 +17,7 @@ function initDB() {
         insertarUsuarios();
     });
 }
-
+//Al insertar los usuarios, se encriptan las contraseñas con bcrypt para mayor seguridad.
 function insertarUsuarios() {
     const adminPass = bcrypt.hashSync('admin123', 10);
     const userPass = bcrypt.hashSync('user123', 10);
