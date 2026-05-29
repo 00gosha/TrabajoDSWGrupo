@@ -1,36 +1,70 @@
-const db = require('./base_de_datos');
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcryptjs';
+import { all, run } from './base_de_datos.js';
 
-function initDB() {
-    db.run(`
+async function initDB() {
+  await run(`
     CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
-        usuario TEXT UNIQUE,
-        password TEXT,
-        rol TEXT
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      usuario TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      rol TEXT NOT NULL DEFAULT 'user',
+      creado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
-    `, (err) => {
-        if (err) console.error(err.message);
+  `);
 
-        insertarUsuarios();
-    });
+  await migrarTablaUsuarios();
+  await insertarUsuariosIniciales();
 }
 
-function insertarUsuarios() {
-    const adminPass = bcrypt.hashSync('admin123', 10);
-    const userPass = bcrypt.hashSync('user123', 10);
+async function migrarTablaUsuarios() {
+  const columnas = await all('PRAGMA table_info(usuarios)');
+  const nombresColumnas = columnas.map((columna) => columna.name);
 
-    const sql = `
-    
-        INSERT OR IGNORE INTO usuarios (nombre, usuario, password, rol)
-        VALUES (?, ?, ?, ?)
-    `;
+  if (!nombresColumnas.includes('usuario')) {
+    await run('ALTER TABLE usuarios ADD COLUMN usuario TEXT');
+  }
 
-    db.run(sql, ['Administrador', 'admin', adminPass, 'admin']);
-    db.run(sql, ['Usuario Normal', 'user', userPass, 'user']);
+  if (!nombresColumnas.includes('password')) {
+    await run('ALTER TABLE usuarios ADD COLUMN password TEXT');
+  }
 
-    console.log('Usuarios iniciales listos.');
+  if (!nombresColumnas.includes('rol')) {
+    await run("ALTER TABLE usuarios ADD COLUMN rol TEXT DEFAULT 'user'");
+  }
+
+  if (!nombresColumnas.includes('creado_en')) {
+    await run('ALTER TABLE usuarios ADD COLUMN creado_en TEXT');
+  }
+
+  const passwordTemporal = await bcrypt.hash('cambiar123', 10);
+
+  await run(`
+    UPDATE usuarios
+    SET usuario = lower(replace(coalesce(nombre, 'usuario'), ' ', '_')) || '_' || id
+    WHERE usuario IS NULL OR trim(usuario) = ''
+  `);
+  await run("UPDATE usuarios SET password = ? WHERE password IS NULL OR trim(password) = ''", [
+    passwordTemporal,
+  ]);
+  await run("UPDATE usuarios SET rol = 'user' WHERE rol IS NULL OR trim(rol) = ''");
+  await run("UPDATE usuarios SET creado_en = CURRENT_TIMESTAMP WHERE creado_en IS NULL OR trim(creado_en) = ''");
+  await run('CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_usuario ON usuarios(usuario)');
 }
 
-module.exports = initDB;
+async function insertarUsuariosIniciales() {
+  const adminPass = await bcrypt.hash('admin123', 10);
+  const userPass = await bcrypt.hash('user123', 10);
+
+  const sql = `
+    INSERT OR IGNORE INTO usuarios (nombre, usuario, password, rol)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  await run(sql, ['Administrador', 'admin', adminPass, 'admin']);
+  await run(sql, ['Usuario Normal', 'user', userPass, 'user']);
+
+  console.log('Usuarios iniciales listos.');
+}
+
+export default initDB;

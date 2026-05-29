@@ -8,11 +8,53 @@ const accessStats = [
 ];
 
 function Login() {
+  const [authMode, setAuthMode] = useState('login');
   const [rememberSession, setRememberSession] = useState(true);
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Login submitted. This frontend is ready to connect to an auth API.');
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      usuario: formData.get('usuario'),
+      password: formData.get('password'),
+    };
+
+    if (authMode === 'register') {
+      payload.nombre = formData.get('nombre');
+    }
+
+    setIsSubmitting(true);
+    setStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch(`/api/auth/${authMode === 'login' ? 'login' : 'register'}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'No se pudo completar la solicitud.');
+      }
+
+      if (rememberSession) {
+        localStorage.setItem('uap-user', JSON.stringify(data.usuario));
+      } else {
+        localStorage.removeItem('uap-user');
+      }
+
+      setStatus({ type: 'success', message: data.message });
+      event.currentTarget.reset();
+      setRememberSession(true);
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -59,22 +101,61 @@ function Login() {
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-steel">
                 Secure session
               </p>
-              <h3 className="mt-2 text-2xl font-black text-chrome">Sign in</h3>
+              <h3 className="mt-2 text-2xl font-black text-chrome">
+                {authMode === 'login' ? 'Sign in' : 'Create account'}
+              </h3>
             </div>
-            <a href="#create-thread" className="text-sm font-semibold text-chrome transition hover:text-white">
-              Request access
-            </a>
+            <div className="grid grid-cols-2 rounded-md border border-chrome/20 bg-white/[0.04] p-1 text-sm font-semibold">
+              <button
+                type="button"
+                aria-pressed={authMode === 'login'}
+                onClick={() => {
+                  setAuthMode('login');
+                  setStatus({ type: '', message: '' });
+                }}
+                className={`rounded px-3 py-2 transition ${
+                  authMode === 'login' ? 'bg-chrome text-black' : 'text-steel hover:text-chrome'
+                }`}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                aria-pressed={authMode === 'register'}
+                onClick={() => {
+                  setAuthMode('register');
+                  setStatus({ type: '', message: '' });
+                }}
+                className={`rounded px-3 py-2 transition ${
+                  authMode === 'register' ? 'bg-chrome text-black' : 'text-steel hover:text-chrome'
+                }`}
+              >
+                Register
+              </button>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="grid gap-5">
+            {authMode === 'register' && (
+              <label>
+                <span className="mb-2 block text-sm font-semibold text-chrome">Full name</span>
+                <input
+                  className="field-shell"
+                  name="nombre"
+                  autoComplete="name"
+                  placeholder="Your name"
+                  required
+                />
+              </label>
+            )}
+
             <label>
-              <span className="mb-2 block text-sm font-semibold text-chrome">Email address</span>
+              <span className="mb-2 block text-sm font-semibold text-chrome">Email or username</span>
               <input
                 className="field-shell"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="name@example.com"
+                name="usuario"
+                autoComplete="username"
+                placeholder="admin, user, or name@example.com"
                 required
               />
             </label>
@@ -85,8 +166,8 @@ function Login() {
                 className="field-shell"
                 name="password"
                 type="password"
-                autoComplete="current-password"
-                placeholder="Enter your password"
+                autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}
+                placeholder={authMode === 'login' ? 'Enter your password' : 'Minimum 6 characters'}
                 required
               />
             </label>
@@ -110,10 +191,23 @@ function Login() {
 
             <button
               type="submit"
-              className="mt-2 rounded-md border border-chrome bg-chrome px-6 py-3 text-sm font-black text-black shadow-silver transition hover:bg-white"
+              disabled={isSubmitting}
+              className="mt-2 rounded-md border border-chrome bg-chrome px-6 py-3 text-sm font-black text-black shadow-silver transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Enter Board
+              {isSubmitting ? 'Processing...' : authMode === 'login' ? 'Enter Board' : 'Create User'}
             </button>
+
+            {status.message && (
+              <p
+                className={`rounded-md border px-4 py-3 text-sm ${
+                  status.type === 'success'
+                    ? 'border-chrome/30 bg-chrome/10 text-chrome'
+                    : 'border-red-400/40 bg-red-500/10 text-red-100'
+                }`}
+              >
+                {status.message}
+              </p>
+            )}
           </form>
         </motion.div>
       </div>
