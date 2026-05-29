@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-const navLinks = ['Home', 'Cases', 'Gallery', 'Discussions', 'Files', 'About'];
+const navLinks = [
+  { label: 'Home', href: '#home' },
+  { label: 'Cases', href: '#cases' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Discussions', href: '#discussions' },
+  { label: 'Create Thread', href: '#create-thread' },
+  { label: 'About', href: '#about' },
+];
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,21 +34,21 @@ function Navbar() {
           <div className="hidden items-center gap-6 lg:flex">
             {navLinks.map((link) => (
               <a
-                key={link}
-                href={link === 'Home' ? '#home' : `#${link.toLowerCase()}`}
+                key={link.href}
+                href={link.href}
                 className="text-sm text-steel transition hover:text-chrome"
               >
-                {link}
+                {link.label}
               </a>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
             <a
-              href="#create-thread"
+              href="#login"
               className="rounded-md border border-chrome/40 bg-chrome px-4 py-2 text-sm font-semibold text-black shadow-silver transition hover:bg-white hover:shadow-[0_0_46px_rgba(232,237,242,0.32)]"
             >
-              Create Thread
+              Login
             </a>
             <button
               type="button"
@@ -67,12 +74,12 @@ function Navbar() {
           >
             {navLinks.map((link) => (
               <a
-                key={link}
-                href={link === 'Home' ? '#home' : `#${link.toLowerCase()}`}
+                key={link.href}
+                href={link.href}
                 onClick={() => setIsOpen(false)}
                 className="rounded-md px-3 py-2 text-sm text-steel transition hover:bg-white/[0.06] hover:text-chrome"
               >
-                {link}
+                {link.label}
               </a>
             ))}
           </motion.div>
