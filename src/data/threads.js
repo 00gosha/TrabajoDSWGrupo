@@ -1,38 +1,38 @@
 export const threads = [
   {
-    title: 'Newly Released UAP Clip Analysis',
-    category: 'Official Videos',
+    title: 'Analisis de un nuevo clip UAP liberado',
+    category: 'Videos oficiales',
     preview:
-      'Breaking down motion vectors, glare behavior, and possible sensor artifacts from a recently surfaced public clip.',
+      'Revision de vectores de movimiento, brillo y posibles artefactos de sensor en un clip publico reciente.',
     comments: 184,
-    date: 'Today',
+    date: 'Hoy',
     thumbnail: 'AARO-VID',
   },
   {
-    title: 'Comparing Official Images from Different Sources',
-    category: 'Image Archive',
+    title: 'Comparacion de imagenes oficiales de distintas fuentes',
+    category: 'Archivo de imagenes',
     preview:
-      'Side-by-side notes on contrast, compression, and visual signatures across multiple public image releases.',
+      'Notas lado a lado sobre contraste, compresion y firmas visuales en multiples publicaciones oficiales.',
     comments: 97,
-    date: 'May 27',
+    date: '27 mayo',
     thumbnail: 'IMG-SET',
   },
   {
-    title: 'Possible Pattern in Recent Government Releases',
-    category: 'Theories & Debate',
+    title: 'Posible patron en publicaciones recientes del gobierno',
+    category: 'Teorias y debate',
     preview:
-      'A timeline-focused discussion about release cadence, redactions, and recurring terminology in public files.',
+      'Discusion enfocada en lineas de tiempo, ritmo de publicaciones, censuras y terminos recurrentes.',
     comments: 231,
-    date: 'May 26',
-    thumbnail: 'PATTERN',
+    date: '26 mayo',
+    thumbnail: 'PATRON',
   },
   {
-    title: 'Discussion: Metallic Disc Visual Characteristics',
-    category: 'Historical Cases',
+    title: 'Debate: caracteristicas visuales de discos metalicos',
+    category: 'Casos historicos',
     preview:
-      'Cataloging recurring descriptions of reflective disc-like objects and comparing them against known phenomena.',
+      'Catalogo de descripciones recurrentes de objetos reflectantes con forma de disco y comparacion con fenomenos conocidos.',
     comments: 142,
-    date: 'May 24',
-    thumbnail: 'DISC',
+    date: '24 mayo',
+    thumbnail: 'DISCO',
   },
 ];

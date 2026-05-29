@@ -1,14 +1,18 @@
 import { motion } from 'framer-motion';
 
-function CategoryCard({ category, index }) {
+function CategoryCard({ category, index, isSelected, onSelect }) {
   return (
-    <motion.article
+    <motion.button
+      type="button"
       initial={{ opacity: 0, y: 28, filter: 'blur(10px)' }}
       whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ delay: index * 0.05, duration: 0.55, ease: 'easeOut' }}
       whileHover={{ y: -8, scale: 1.01 }}
-      className="liquid-glass chrome-border group rounded-lg p-6 transition hover:border-chrome/60 hover:shadow-silver"
+      onClick={() => onSelect(category.title)}
+      className={`liquid-glass chrome-border group rounded-lg p-6 text-left transition hover:border-chrome/60 hover:shadow-silver ${
+        isSelected ? 'border-chrome/70 shadow-silver' : ''
+      }`}
     >
       <div className="mb-6 flex items-center justify-between">
         <span className="grid h-12 w-12 place-items-center rounded-full border border-chrome/30 bg-white/[0.05] text-xl text-chrome shadow-insetSilver">
@@ -18,6 +22,9 @@ function CategoryCard({ category, index }) {
       </div>
       <h3 className="text-xl font-bold text-chrome">{category.title}</h3>
       <p className="mt-3 min-h-20 text-sm leading-6 text-steel">{category.description}</p>
+      <p className="mt-4 text-sm font-semibold text-chrome">
+        {isSelected ? 'Categoria activa' : 'Abrir hilos'}
+      </p>
       <div className="mt-6 flex flex-wrap gap-2">
         {category.tags.map((tag) => (
           <span
@@ -28,7 +35,7 @@ function CategoryCard({ category, index }) {
           </span>
         ))}
       </div>
-    </motion.article>
+    </motion.button>
   );
 }
 

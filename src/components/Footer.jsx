@@ -1,5 +1,5 @@
 function Footer() {
-  const links = ['Privacy', 'Rules', 'Categories', 'Contact'];
+  const links = ['Privacidad', 'Reglas', 'Categorias', 'Contacto'];
 
   return (
     <footer className="border-t border-chrome/15 bg-black px-4 py-10 sm:px-6">
@@ -7,7 +7,7 @@ function Footer() {
         <div>
           <p className="metal-text text-2xl font-black">UAPBoard</p>
           <p className="mt-2 text-sm text-steel">
-            Frontend concept for a public UAP discussion platform.
+            Concepto frontend para una plataforma publica de discusion UAP.
           </p>
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-steel">

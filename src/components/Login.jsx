@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const accessStats = [
-  { label: 'Verified members', value: '2.1K' },
-  { label: 'Open cases', value: '48' },
-  { label: 'Review queue', value: '12' },
+  { label: 'Miembros verificados', value: '2.1K' },
+  { label: 'Casos abiertos', value: '48' },
+  { label: 'En revision', value: '12' },
 ];
 
 function Login() {
@@ -16,7 +16,8 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const payload = {
       usuario: formData.get('usuario'),
       password: formData.get('password'),
@@ -48,7 +49,7 @@ function Login() {
       }
 
       setStatus({ type: 'success', message: data.message });
-      event.currentTarget.reset();
+      form.reset();
       setRememberSession(true);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
@@ -58,7 +59,7 @@ function Login() {
   };
 
   return (
-    <section id="login" className="relative overflow-hidden px-4 py-24 sm:px-6">
+    <section id="login" className="relative scroll-mt-32 overflow-hidden px-4 py-24 sm:px-6">
       <div className="noise-layer absolute inset-0 opacity-20" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-chrome/30 to-transparent" />
       <div className="absolute bottom-10 right-[-10rem] h-80 w-80 rounded-full border border-chrome/10 bg-chrome/[0.03] blur-3xl" />
@@ -71,12 +72,12 @@ function Login() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-steel">
-            Member access
+            Acceso de miembros
           </p>
-          <h2 className="metal-text mt-3 text-4xl font-black sm:text-5xl">User Login</h2>
+          <h2 className="metal-text mt-3 text-4xl font-black sm:text-5xl">Ingreso de usuario</h2>
           <p className="mt-5 max-w-xl text-sm leading-7 text-steel">
-            Access your account to follow investigations, save evidence threads, and continue
-            moderated discussions from your profile.
+            Accede a tu cuenta para seguir investigaciones, guardar hilos de evidencia y continuar
+            discusiones moderadas desde tu perfil.
           </p>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:max-w-xl">
@@ -99,10 +100,10 @@ function Login() {
           <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-steel">
-                Secure session
+                Sesion segura
               </p>
               <h3 className="mt-2 text-2xl font-black text-chrome">
-                {authMode === 'login' ? 'Sign in' : 'Create account'}
+                {authMode === 'login' ? 'Iniciar sesion' : 'Crear cuenta'}
               </h3>
             </div>
             <div className="grid grid-cols-2 rounded-md border border-chrome/20 bg-white/[0.04] p-1 text-sm font-semibold">
@@ -117,7 +118,7 @@ function Login() {
                   authMode === 'login' ? 'bg-chrome text-black' : 'text-steel hover:text-chrome'
                 }`}
               >
-                Login
+                Ingresar
               </button>
               <button
                 type="button"
@@ -130,7 +131,7 @@ function Login() {
                   authMode === 'register' ? 'bg-chrome text-black' : 'text-steel hover:text-chrome'
                 }`}
               >
-                Register
+                Registro
               </button>
             </div>
           </div>
@@ -138,36 +139,36 @@ function Login() {
           <form onSubmit={handleSubmit} className="grid gap-5">
             {authMode === 'register' && (
               <label>
-                <span className="mb-2 block text-sm font-semibold text-chrome">Full name</span>
+                <span className="mb-2 block text-sm font-semibold text-chrome">Nombre completo</span>
                 <input
                   className="field-shell"
                   name="nombre"
                   autoComplete="name"
-                  placeholder="Your name"
+                  placeholder="Tu nombre"
                   required
                 />
               </label>
             )}
 
             <label>
-              <span className="mb-2 block text-sm font-semibold text-chrome">Email or username</span>
+              <span className="mb-2 block text-sm font-semibold text-chrome">Correo o usuario</span>
               <input
                 className="field-shell"
                 name="usuario"
                 autoComplete="username"
-                placeholder="admin, user, or name@example.com"
+                placeholder="admin, user o nombre@ejemplo.com"
                 required
               />
             </label>
 
             <label>
-              <span className="mb-2 block text-sm font-semibold text-chrome">Password</span>
+              <span className="mb-2 block text-sm font-semibold text-chrome">Contrasena</span>
               <input
                 className="field-shell"
                 name="password"
                 type="password"
                 autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}
-                placeholder={authMode === 'login' ? 'Enter your password' : 'Minimum 6 characters'}
+                placeholder={authMode === 'login' ? 'Ingresa tu contrasena' : 'Minimo 6 caracteres'}
                 required
               />
             </label>
@@ -181,11 +182,11 @@ function Login() {
                   type="checkbox"
                   onChange={(event) => setRememberSession(event.target.checked)}
                 />
-                Remember session
+                Recordar sesion
               </label>
 
               <a href="#login" className="font-semibold text-chrome transition hover:text-white">
-                Forgot password?
+                Olvidaste tu contrasena?
               </a>
             </div>
 
@@ -194,7 +195,7 @@ function Login() {
               disabled={isSubmitting}
               className="mt-2 rounded-md border border-chrome bg-chrome px-6 py-3 text-sm font-black text-black shadow-silver transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? 'Processing...' : authMode === 'login' ? 'Enter Board' : 'Create User'}
+              {isSubmitting ? 'Procesando...' : authMode === 'login' ? 'Entrar al foro' : 'Crear usuario'}
             </button>
 
             {status.message && (

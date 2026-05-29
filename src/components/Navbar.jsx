@@ -2,12 +2,12 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'Cases', href: '#cases' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Discussions', href: '#discussions' },
-  { label: 'Create Thread', href: '#create-thread' },
-  { label: 'About', href: '#about' },
+  { label: 'Inicio', href: '#home' },
+  { label: 'Casos', href: '#cases' },
+  { label: 'Galeria', href: '#gallery' },
+  { label: 'Discusiones', href: '#discussions' },
+  { label: 'Crear hilo', href: '#create-thread' },
+  { label: 'Acerca', href: '#about' },
 ];
 
 function Navbar() {
@@ -22,7 +22,7 @@ function Navbar() {
     >
       <nav className="liquid-glass chrome-border mx-auto max-w-7xl rounded-lg px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <a href="#home" className="flex items-center gap-3" aria-label="UAPBoard home">
+          <a href="#home" className="flex items-center gap-3" aria-label="Inicio de UAPBoard">
             <span className="grid h-11 w-11 place-items-center rounded-full border border-chrome/50 bg-white/[0.08] text-sm font-black tracking-[0.16em] text-chrome shadow-silver">
               UAP
             </span>
@@ -48,13 +48,13 @@ function Navbar() {
               href="#login"
               className="rounded-md border border-chrome/40 bg-chrome px-4 py-2 text-sm font-semibold text-black shadow-silver transition hover:bg-white hover:shadow-[0_0_46px_rgba(232,237,242,0.32)]"
             >
-              Login
+              Ingresar
             </a>
             <button
               type="button"
               onClick={() => setIsOpen((current) => !current)}
               className="grid h-10 w-10 place-items-center rounded-md border border-chrome/25 bg-white/[0.04] text-chrome transition hover:border-chrome/60 lg:hidden"
-              aria-label="Toggle navigation menu"
+              aria-label="Abrir menu de navegacion"
               aria-expanded={isOpen}
             >
               <span className="flex flex-col gap-1.5">

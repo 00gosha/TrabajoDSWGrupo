@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import initDB from './DAO/init_DB.js';
 import authRoutes from './rutas/ruta.js';
+import threadRoutes from './rutas/hilos.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -28,6 +29,11 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/threads', threadRoutes);
+app.use('/uploads', express.static(join(__dirname, 'uploads')));
+app.use('/uploads', (req, res) => {
+  res.status(404).json({ ok: false, message: 'Archivo no encontrado.' });
+});
 app.use(express.static(join(__dirname, 'dist')));
 
 app.get(/.*/, (req, res) => {

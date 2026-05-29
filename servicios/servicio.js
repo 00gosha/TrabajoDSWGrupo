@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { get, run } from '../DAO/base_de_datos.js';
+import { all, get, run } from '../DAO/base_de_datos.js';
 
 function limpiarUsuario(usuario) {
   return {
@@ -74,4 +74,111 @@ export async function autenticarUsuario({ usuario, password }) {
   }
 
   return limpiarUsuario(usuarioEncontrado);
+}
+
+function formatearFecha(creadoEn) {
+  const fecha = new Date(creadoEn);
+  const hoy = new Date();
+
+  if (fecha.toDateString() === hoy.toDateString()) {
+    return 'Hoy';
+  }
+
+  return fecha.toLocaleDateString('es-CL', {
+    day: '2-digit',
+    month: 'short',
+  });
+}
+
+function limpiarHilo(hilo) {
+  return {
+    id: hilo.id,
+    title: hilo.titulo,
+    category: hilo.categoria,
+    preview: hilo.descripcion,
+    source: hilo.fuente,
+    mediaUrl: hilo.media_url,
+    mediaType: hilo.media_type,
+    author: hilo.autor,
+    comments: hilo.comentarios,
+    thumbnail: hilo.miniatura,
+    date: formatearFecha(hilo.creado_en),
+  };
+}
+
+export async function listarHilos({ category } = {}) {
+  const categoriaLimpia = category?.trim();
+  const hilos = categoriaLimpia
+    ? await all(
+        `
+          SELECT *
+          FROM hilos
+          WHERE categoria = ?
+          ORDER BY datetime(creado_en) DESC, id DESC
+        `,
+        [categoriaLimpia],
+      )
+    : await all(`
+        SELECT *
+        FROM hilos
+        ORDER BY datetime(creado_en) DESC, id DESC
+      `);
+
+  return hilos.map(limpiarHilo);
+}
+
+export async function obtenerHiloPorId(id) {
+  const hilo = await get('SELECT * FROM hilos WHERE id = ?', [id]);
+
+  if (!hilo) {
+    const error = new Error('Hilo no encontrado.');
+    error.status = 404;
+    throw error;
+  }
+
+  return limpiarHilo(hilo);
+}
+
+export async function crearHilo({ title, category, description, source, author, mediaUrl, mediaType }) {
+  const tituloLimpio = title?.trim();
+  const categoriaLimpia = category?.trim();
+  const descripcionLimpia = description?.trim();
+  const fuenteLimpia = source?.trim() || null;
+  const autorLimpio = author?.trim() || 'Anonimo';
+  const mediaUrlLimpia = mediaUrl?.trim() || null;
+  const mediaTypeLimpio = mediaType?.trim() || null;
+
+  if (!tituloLimpio || !categoriaLimpia || !descripcionLimpia) {
+    const error = new Error('Titulo, categoria y descripcion son obligatorios.');
+    error.status = 400;
+    throw error;
+  }
+
+  const miniatura = categoriaLimpia
+    .split(' ')
+    .map((palabra) => palabra[0])
+    .join('')
+    .slice(0, 4)
+    .toUpperCase();
+
+  const result = await run(
+    `
+      INSERT INTO hilos (titulo, categoria, descripcion, fuente, media_url, media_type, autor, miniatura)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `,
+    [
+      tituloLimpio,
+      categoriaLimpia,
+      descripcionLimpia,
+      fuenteLimpia,
+      mediaUrlLimpia,
+      mediaTypeLimpio,
+      autorLimpio,
+      miniatura || 'UAP',
+    ],
+  );
+
+  const hilo = await get('SELECT * FROM hilos WHERE id = ?', [result.id]);
+
+  return limpiarHilo(hilo);
 }

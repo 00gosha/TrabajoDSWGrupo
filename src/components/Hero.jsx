@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 
 const stats = [
-  { value: '120+', label: 'Threads' },
-  { value: '3.4K', label: 'Comments' },
-  { value: '850', label: 'Images Shared' },
+  { value: '120+', label: 'Hilos' },
+  { value: '3.4K', label: 'Comentarios' },
+  { value: '850', label: 'Imagenes compartidas' },
 ];
 
 const fadeUp = {
@@ -30,14 +30,14 @@ function Hero() {
           className="max-w-4xl"
         >
           <span className="liquid-glass inline-flex rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-chrome/90">
-            Official UAP Discussion Platform
+            Plataforma oficial de discusion UAP
           </span>
           <h1 className="metal-text mt-7 max-w-4xl text-6xl font-black leading-none sm:text-7xl lg:text-8xl">
-            Analyze the Unknown
+            Analiza lo desconocido
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-steel sm:text-lg">
-            A modern discussion board dedicated to public UAP videos, images, and documents
-            released by official U.S. government sources.
+            Un foro moderno dedicado a videos, imagenes y documentos publicos sobre UAP
+            liberados por fuentes oficiales.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -45,13 +45,13 @@ function Hero() {
               href="#discussions"
               className="rounded-md border border-chrome bg-chrome px-6 py-3 text-center text-sm font-bold text-black shadow-silver transition hover:bg-white"
             >
-              Explore Threads
+              Explorar hilos
             </a>
             <a
               href="#gallery"
               className="liquid-glass rounded-md px-6 py-3 text-center text-sm font-bold text-chrome transition hover:border-chrome/60 hover:shadow-silver"
             >
-              View Gallery
+              Ver galeria
             </a>
           </div>
         </motion.div>
